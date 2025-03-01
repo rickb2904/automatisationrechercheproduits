@@ -20,15 +20,18 @@ interface Product {
     image: string;
     prix: string;
     nbCouleurs: string;
-    categorie: string; // On veut stocker la catégorie
+    categorie: string;  // On veut stocker la catégorie
 }
 
 /**
- * Configuration PostgreSQL via DATABASE_URL
+ * Configuration PostgreSQL via .env
  */
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: Number(process.env.DB_PORT) || 5432,
 });
 
 /**
@@ -83,7 +86,7 @@ async function scrapeOnePage(page: Page, url: string): Promise<Product[]> {
                 image,
                 prix,
                 nbCouleurs,
-                categorie: "", // provisoirement vide
+                categorie: "",  // provisoirement vide
             };
         });
     });

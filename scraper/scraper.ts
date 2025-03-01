@@ -4,10 +4,13 @@ import { Pool } from "pg";
 
 dotenv.config(); // Charger les variables d'environnement depuis .env
 
-// Configuration de la base PostgreSQL via DATABASE_URL
+// Configuration de la base PostgreSQL
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    user: process.env.DB_USER,       // "postgres" par ex.
+    host: process.env.DB_HOST,       // "localhost" par ex.
+    database: process.env.DB_NAME,   // "idefixeproducts" par ex.
+    password: process.env.DB_PASSWORD,
+    port: Number(process.env.DB_PORT) || 5432,
 });
 
 /**
@@ -154,7 +157,6 @@ async function scrapeUrl(page: Page, url: string, screenshotName: string) {
         "https://makito.es/epages/Makito.sf/fr_FR/?ChangeAction=RealizaBusquedaAvanzada&ObjectID=23941&ViewAction=View&Page=1&PageSize=1000",
         "https://makito.es/epages/Makito.sf/fr_FR/?ChangeAction=RealizaBusquedaAvanzada&ObjectID=23934&ViewAction=View&Page=1&PageSize=1000",
     ];
-
 
     // Lance le navigateur
     const browser = await puppeteer.launch({ headless: false });
