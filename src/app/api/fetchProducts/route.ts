@@ -121,8 +121,52 @@ export async function GET(request: Request) {
             toptexRows = resToptex.rows;
         }
 
-        // -- Concaténer les deux tableaux
-        const combined = [...makitoRows, ...toptexRows];
+        // -- Requête Payper --
+        // -- Requête Payper --
+        let payperRows = [];
+        if (query) {
+            const resPayper = await client.query(
+                `SELECT
+                     'payper' AS source,
+                     nom,
+                     lien,
+                     image,
+                     reference,
+                     couleurs,
+                     categorie,
+                     marque
+                 FROM produits_payper
+                 WHERE (nom ILIKE $1 OR categorie ILIKE $1)
+                 ORDER BY nom
+                     LIMIT $2
+                 OFFSET $3
+                `,
+                [`%${query}%`, limit, offset]
+            );
+            payperRows = resPayper.rows;
+        } else {
+            const resPayper = await client.query(
+                `SELECT
+                     'payper' AS source,
+                     nom,
+                     lien,
+                     image,
+                     reference,
+                     couleurs,
+                     categorie,
+                     marque
+                 FROM produits_payper
+                 ORDER BY nom
+                     LIMIT $1
+                 OFFSET $2
+                `,
+                [limit, offset]
+            );
+            payperRows = resPayper.rows;
+        }
+
+        // -- Concaténer les trois tableaux
+        const combined = [...makitoRows, ...toptexRows, ...payperRows];
 
         // -- Retourner la liste
         return NextResponse.json(combined);
