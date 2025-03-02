@@ -43,6 +43,41 @@ function wait(ms: number) {
 }
 
 /**
+ * Mapping catégories anglaises -> françaises
+ */
+const categoryMapping: Record<string, string> = {
+    "polo-shirts": "Polos",
+    "t-shirts": "T-shirts",
+    "shirts": "Chemises",
+    "sweatshirts": "Sweatshirts",
+    "pullovers": "Pullovers",
+    "polar-jackets": "Polaires",
+    "4-season": "4 saisons",
+    "work-coats": "Blouses",
+    "vests": "Gilets",
+    "jackets": "Vestes",
+    "soft-shells": "Softshell",
+    "padded-soft-shells": "Softshell matelassé",
+    "bermuda-shorts": "Bermudas",
+    "denim": "Jeans",
+    "trousers": "Pantalons",
+    "sweat-trousers": "Jogging",
+    "overall-and-bib": "Salopettes",
+    "thermal-shirts": "T-shirts thermiques",
+    "anti-rain": "Anti-pluie",
+    "thermal-pants": "Pantalons thermiques",
+    "swimwear": "Maillots",
+    "accessories": "Accessoires",
+    "merchandising": "Merchandising",
+    "neckwarmer": "Tour de cou",
+    "high-visibility": "Haute visibilité",
+    "tech-nik": "Tech-nik",
+    "multipro": "Multipro",
+    "industry": "Industrie",
+    "corporate": "Entreprise",
+};
+
+/**
  * Récupère les produits sur UNE page Payper
  *  - Extrait la catégorie (h1)
  *  - Parcourt .catalogoItem
@@ -180,9 +215,13 @@ async function scrapePayperCategory(page: Page, url: string): Promise<Product[]>
         console.log(`\n==== Scraping catégorie : ${cat.name} ====\n`);
         const catProducts = await scrapePayperCategory(page, cat.url);
 
-        // On force la catégorie "cat.name"
+        // Conversion anglais -> français si possible
+        const frenchCat = categoryMapping[cat.name] || cat.name;
+        // ex. "shirts" => "Chemises", "polo-shirts" => "Polos"
+
         catProducts.forEach(p => {
-            p.categorie = cat.name;
+            // On écrase la catégorie avec la version française
+            p.categorie = frenchCat;
         });
 
         allProducts.push(...catProducts);
@@ -209,7 +248,7 @@ async function scrapePayperCategory(page: Page, url: string): Promise<Product[]>
         RETURNING *;
             `;
             const values = [
-                prod.categorie,
+                prod.categorie,  // catégorie en français
                 prod.nom,
                 prod.lien,
                 prod.image,
