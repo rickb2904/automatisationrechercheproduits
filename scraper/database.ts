@@ -11,6 +11,8 @@ const pool = new Pool({
     port: Number(process.env.DB_PORT),
 });
 
+
+
 export async function saveToDatabase(products: any[]) {
     const client = await pool.connect();
     try {
