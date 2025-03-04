@@ -4,9 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb34836f-73bb-4c60-be30-2f07c3a872aa" name="Changes" comment="Update">
+    <list default="true" id="fb34836f-73bb-4c60-be30-2f07c3a872aa" name="Changes" comment="Marque">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/2f3d63ef-3541-41c3-854a-3fde131a1f75.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/2f3d63ef-3541-41c3-854a-3fde131a1f75/storage_v2/_src_/database/idefixeproducts._r-AFw.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/2f3d63ef-3541-41c3-854a-3fde131a1f75/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/2f3d63ef-3541-41c3-854a-3fde131a1f75/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/2f3d63ef-3541-41c3-854a-3fde131a1f75/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/893e897e-319e-40aa-9093-9b820b79137e.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/893e897e-319e-40aa-9093-9b820b79137e/storage_v2/_src_/database/idefixeproducts._r-AFw.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/893e897e-319e-40aa-9093-9b820b79137e/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/893e897e-319e-40aa-9093-9b820b79137e/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/893e897e-319e-40aa-9093-9b820b79137e/storage_v2/_src_/database/idefixeproducts._r-AFw/schema/public.abK9xQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scraper/scraper3.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scraper/scraper3.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/fetchProducts/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/fetchProducts/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,9 +41,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rickb2904&quot;
+  }
+}</component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="2c40c86c-3e46-433b-815f-4eb27c566924" />
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/rickb2904/automatisationrechercheproduits.git&quot;,
+    &quot;accountId&quot;: &quot;66331cb2-7dc7-4048-b921-72dcb5cdddd9&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -42,8 +69,8 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;23.7.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.5&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.13.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.8&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/rickb/WebstormProjects/untitled/public&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -52,7 +79,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\rickb\\WebstormProjects\\untitled\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rickbouyaghi/WebstormProjects/automatisationrechercheproduits/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -92,6 +119,11 @@
       <workItem from="1740841454059" duration="10057000" />
       <workItem from="1740854885040" duration="8357000" />
       <workItem from="1740927140219" duration="3765000" />
+      <workItem from="1740931551123" duration="3217000" />
+      <workItem from="1740944883794" duration="468000" />
+      <workItem from="1741028000831" duration="1890000" />
+      <workItem from="1741030196304" duration="100000" />
+      <workItem from="1741031537894" duration="1079000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <option name="closed" value="true" />
@@ -144,6 +176,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update" />
+    <MESSAGE value="Marque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Marque" />
   </component>
 </project>

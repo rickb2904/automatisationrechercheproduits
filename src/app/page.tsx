@@ -5,58 +5,54 @@ import ProductCard from "@/app/components/ProductCard";
 
 export default function Home() {
     const [products, setProducts] = useState<any[]>([]);
-    const [search, setSearch] = useState("");
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(20); // Par exemple, 20 résultats par page
 
-    // Fonction pour récupérer les produits depuis l'API
+    // Filtres
+    const [search, setSearch] = useState("");  // recherche texte => query
+    const [brand, setBrand] = useState("all"); // "all", "makito", "toptex", "payper"
+    const [color, setColor] = useState("");    // couleur
+
+    // Pagination
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(20);
+
+    // Récupération des produits
     const fetchProducts = async () => {
         try {
-            const res = await axios.get(
-                `/api/fetchProducts?query=${encodeURIComponent(search)}&page=${page}&limit=${limit}`
-            );
+            // Construire l'URL avec tous les filtres
+            const url = `/api/fetchProducts?brand=${encodeURIComponent(brand)}&color=${encodeURIComponent(color)}&query=${encodeURIComponent(search)}&page=${page}&limit=${limit}`;
+
+            const res = await axios.get(url);
             setProducts(res.data);
         } catch (error) {
             console.error("Erreur lors de la récupération des produits:", error);
         }
     };
 
-    // Debounce sur la recherche
+    // Debounce sur la recherche / brand / color => reset page
     useEffect(() => {
-        // À chaque fois que la recherche change, on revient à la page 1
         setPage(1);
-
         const timer = setTimeout(() => {
             fetchProducts();
         }, 300);
-
         return () => clearTimeout(timer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
+    }, [search, brand, color]);
 
-    // Quand la page ou la limite changent, on fetch
+    // Quand page ou limit changent, on fetch direct
     useEffect(() => {
         fetchProducts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit]);
 
-    // Gérer la navigation
-    const handleNextPage = () => {
-        setPage((prev) => prev + 1);
-    };
+    // Navigation
+    const handleNextPage = () => setPage((prev) => prev + 1);
+    const handlePrevPage = () => setPage((prev) => Math.max(1, prev - 1));
 
-    const handlePrevPage = () => {
-        setPage((prev) => Math.max(1, prev - 1));
-    };
-
-    // Remise à zéro de la recherche
-    const clearSearch = () => {
-        setSearch("");
-    };
+    // Effacer la recherche
+    const clearSearch = () => setSearch("");
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
-            {/* Header sans dégradé, juste #ffa024 */}
             <header className="bg-[#ffa024] text-white py-8 shadow-lg">
                 <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
                     {/* Logo + Titre */}
@@ -71,7 +67,7 @@ export default function Home() {
                         </h1>
                     </div>
 
-                    {/* Choix de la limite (facultatif) */}
+                    {/* Choix de la limite */}
                     <div className="flex items-center space-x-2">
                         <label htmlFor="limitSelect" className="text-sm font-medium">
                             Afficher :
@@ -90,26 +86,60 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* Contenu principal */}
             <div className="max-w-5xl mx-auto px-4 py-8">
-                {/* Barre de recherche */}
-                <div className="mb-6 flex items-center">
-                    <input
-                        type="text"
-                        placeholder="Rechercher un produit..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="flex-1 p-3 border border-gray-300 rounded-l shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ffa024] transition"
-                    />
-                    {/* Bouton d'effacement */}
-                    {search && (
-                        <button
-                            onClick={clearSearch}
-                            className="bg-gray-200 px-4 py-2 rounded-r shadow hover:bg-gray-300 transition text-sm"
+                {/* Section filtres */}
+                <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Champ de recherche */}
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            placeholder="Rechercher un produit..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="flex-1 p-3 border border-gray-300 rounded-l shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ffa024] transition"
+                        />
+                        {search && (
+                            <button
+                                onClick={clearSearch}
+                                className="bg-gray-200 px-4 py-2 rounded-r shadow hover:bg-gray-300 transition text-sm"
+                            >
+                                Effacer
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Sélecteur de marque */}
+                    <div className="flex items-center">
+                        <label htmlFor="brandSelect" className="text-sm font-medium w-24">
+                            Marque :
+                        </label>
+                        <select
+                            id="brandSelect"
+                            className="flex-1 bg-white text-gray-700 font-semibold py-2 px-3 rounded shadow focus:outline-none focus:ring-2 focus:ring-[#ffa024] transition"
+                            value={brand}
+                            onChange={(e) => setBrand(e.target.value)}
                         >
-                            Effacer
-                        </button>
-                    )}
+                            <option value="all">Toutes</option>
+                            <option value="makito">Makito</option>
+                            <option value="toptex">TopTex</option>
+                            <option value="payper">Payper</option>
+                        </select>
+                    </div>
+
+                    {/* Champ couleur (Makito / Payper)
+                    <div className="flex items-center space-x-2">
+                        <label htmlFor="colorInput" className="text-sm font-medium w-24">
+                            Couleur :
+                        </label>
+                        <input
+                            id="colorInput"
+                            type="text"
+                            placeholder="ex: Rouge"
+                            value={color}
+                            onChange={(e) => setColor(e.target.value)}
+                            className="flex-1 p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ffa024] transition"
+                        />
+                    </div>*/}
                 </div>
 
                 {/* Affichage des produits */}
@@ -125,7 +155,7 @@ export default function Home() {
                     </ul>
                 )}
 
-                {/* Navigation pagination */}
+                {/* Pagination */}
                 <div className="mt-8 flex justify-center space-x-4">
                     <button
                         onClick={handlePrevPage}

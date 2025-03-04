@@ -15,160 +15,164 @@ const pool = new Pool({
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
-    // 1) Récupération des paramètres de recherche et de pagination
-    const query = searchParams.get("query") || "";
+    // Paramètres
+    const query = searchParams.get("query") || "";       // recherche texte
+    const brand = searchParams.get("brand") || "all";    // "all", "makito", "toptex", "payper"
+    const color = searchParams.get("color") || "";       // couleur
     const pageParam = searchParams.get("page") || "1";
-    const limitParam = searchParams.get("limit") || "20"; // On limite par défaut à 20
+    const limitParam = searchParams.get("limit") || "20";
 
-    // 2) Conversion en nombres
     const page = parseInt(pageParam, 10);
     const limit = parseInt(limitParam, 10);
     const offset = (page - 1) * limit;
 
     const client = await pool.connect();
     try {
-        // -- Requête Makito --
-        let makitoRows = [];
-        if (query) {
-            const resMakito = await client.query(
-                `SELECT
-                     'makito' AS source,
-                     nom,
-                     NULL AS lien,
-                     image,
-                     reference,
-                     couleurs,
-                     NULL AS marque,
-                     NULL AS categorie,
-                     NULL AS nb_couleurs,
-                     NULL AS prix
-                 FROM produits
-                 WHERE nom ILIKE $1
-                 ORDER BY nom
-                     LIMIT $2
-                 OFFSET $3
-                `,
-                [`%${query}%`, limit, offset]
-            );
-            makitoRows = resMakito.rows;
-        } else {
-            const resMakito = await client.query(
-                `SELECT
-                     'makito' AS source,
-                     nom,
-                     NULL AS lien,
-                     image,
-                     reference,
-                     couleurs,
-                     NULL AS marque,
-                     NULL AS categorie,
-                     NULL AS nb_couleurs,
-                     NULL AS prix
-                 FROM produits
-                 ORDER BY nom
-                     LIMIT $1
-                 OFFSET $2
-                `,
-                [limit, offset]
-            );
-            makitoRows = resMakito.rows;
+        // On va concaténer nos résultats ici
+        let combined: any[] = [];
+
+        // ------------------------------------------------------------------
+        // 1) MAKITO
+        // ------------------------------------------------------------------
+        if (brand === "all" || brand === "makito") {
+            let whereClauses: string[] = [];
+            let params: any[] = [];
+
+            // Filtre texte
+            if (query) {
+                params.push(`%${query}%`);
+                whereClauses.push(`nom ILIKE $${params.length}`);
+            }
+
+            // Filtre couleur (text[] => couleurs && '{Rouge}'::text[])
+            if (color) {
+                params.push(`{${color}}`);
+                whereClauses.push(`couleurs && $${params.length}::text[]`);
+            }
+
+            let whereSQL = "";
+            if (whereClauses.length > 0) {
+                whereSQL = "WHERE " + whereClauses.join(" AND ");
+            }
+
+            // Ajout limit/offset
+            params.push(limit, offset);
+
+            const makitoSQL = `
+                SELECT
+                    'makito' AS source,
+                    nom,
+                    NULL AS lien,
+                    image,
+                    reference,
+                    couleurs,
+                    NULL AS marque,
+                    NULL AS categorie,
+                    NULL AS nb_couleurs,
+                    NULL AS prix
+                FROM produits
+                         ${whereSQL}
+                ORDER BY nom
+                    LIMIT $${params.length - 1}
+                OFFSET $${params.length}
+            `;
+
+            const resMakito = await client.query(makitoSQL, params);
+            combined.push(...resMakito.rows);
         }
 
-        // -- Requête TopTex --
-        let toptexRows = [];
-        if (query) {
-            const resToptex = await client.query(
-                `SELECT
-                     'toptex' AS source,
-                     nom,
-                     image,
-                     reference,
-                     NULL AS lien,
-                     NULL AS couleurs,
-                     marque,
-                     categorie,
-                     nb_couleurs,
-                     prix
-                 FROM produits_toptex
-                 WHERE nom ILIKE $1
-                 ORDER BY nom
-                     LIMIT $2
-                 OFFSET $3
-                `,
-                [`%${query}%`, limit, offset]
-            );
-            toptexRows = resToptex.rows;
-        } else {
-            const resToptex = await client.query(
-                `SELECT
-                     'toptex' AS source,
-                     nom,
-                     image,
-                     reference,
-                     NULL AS lien,
-                     NULL AS couleurs,
-                     marque,
-                     categorie,
-                     nb_couleurs,
-                     prix
-                 FROM produits_toptex
-                 ORDER BY nom
-                     LIMIT $1
-                 OFFSET $2
-                `,
-                [limit, offset]
-            );
-            toptexRows = resToptex.rows;
+        // ------------------------------------------------------------------
+        // 2) TOPTEX
+        // ------------------------------------------------------------------
+        if (brand === "all" || brand === "toptex") {
+            // TopTex n'a pas de couleur, on ignore color
+            let whereClauses: string[] = [];
+            let params: any[] = [];
+
+            // Filtre texte
+            if (query) {
+                params.push(`%${query}%`);
+                whereClauses.push(`nom ILIKE $${params.length}`);
+            }
+
+            let whereSQL = "";
+            if (whereClauses.length > 0) {
+                whereSQL = "WHERE " + whereClauses.join(" AND ");
+            }
+
+            params.push(limit, offset);
+
+            const toptexSQL = `
+                SELECT
+                    'toptex' AS source,
+                    nom,
+                    image,
+                    reference,
+                    NULL AS lien,
+                    NULL AS couleurs,
+                    marque,
+                    categorie,
+                    nb_couleurs,
+                    prix
+                FROM produits_toptex
+                         ${whereSQL}
+                ORDER BY nom
+                    LIMIT $${params.length - 1}
+                OFFSET $${params.length}
+            `;
+
+            const resToptex = await client.query(toptexSQL, params);
+            combined.push(...resToptex.rows);
         }
 
-        // -- Requête Payper --
-        // -- Requête Payper --
-        let payperRows = [];
-        if (query) {
-            const resPayper = await client.query(
-                `SELECT
-                     'payper' AS source,
-                     nom,
-                     lien,
-                     image,
-                     reference,
-                     couleurs,
-                     categorie,
-                     marque
-                 FROM produits_payper
-                 WHERE (nom ILIKE $1 OR categorie ILIKE $1)
-                 ORDER BY nom
-                     LIMIT $2
-                 OFFSET $3
-                `,
-                [`%${query}%`, limit, offset]
-            );
-            payperRows = resPayper.rows;
-        } else {
-            const resPayper = await client.query(
-                `SELECT
-                     'payper' AS source,
-                     nom,
-                     lien,
-                     image,
-                     reference,
-                     couleurs,
-                     categorie,
-                     marque
-                 FROM produits_payper
-                 ORDER BY nom
-                     LIMIT $1
-                 OFFSET $2
-                `,
-                [limit, offset]
-            );
-            payperRows = resPayper.rows;
+        // ------------------------------------------------------------------
+        // 3) PAYPER
+        // ------------------------------------------------------------------
+        if (brand === "all" || brand === "payper") {
+            let whereClauses: string[] = [];
+            let params: any[] = [];
+
+            // Filtre texte => nom ILIKE ou categorie ILIKE
+            if (query) {
+                params.push(`%${query}%`);
+                whereClauses.push(`(nom ILIKE $${params.length} OR categorie ILIKE $${params.length})`);
+            }
+
+            // Filtre couleur => "couleurs ILIKE '%color%'"
+            if (color) {
+                params.push(`%${color}%`);
+                whereClauses.push(`couleurs ILIKE $${params.length}`);
+            }
+
+            let whereSQL = "";
+            if (whereClauses.length > 0) {
+                whereSQL = "WHERE " + whereClauses.join(" AND ");
+            }
+
+            params.push(limit, offset);
+
+            const payperSQL = `
+                SELECT
+                    'payper' AS source,
+                    nom,
+                    lien,
+                    image,
+                    reference,
+                    couleurs,
+                    categorie,
+                    marque
+                FROM produits_payper
+                         ${whereSQL}
+                ORDER BY nom
+                    LIMIT $${params.length - 1}
+                OFFSET $${params.length}
+            `;
+
+            const resPayper = await client.query(payperSQL, params);
+            combined.push(...resPayper.rows);
         }
 
-        // -- Concaténer les trois tableaux
-        const combined = [...makitoRows, ...toptexRows, ...payperRows];
-
-        // -- Retourner la liste
+        // On retourne la liste globale
         return NextResponse.json(combined);
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
